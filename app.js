@@ -1,5 +1,5 @@
-require('./models/Member');
-require('./models/Room');
+const Member = require('./models/Member');
+const Room = require('./models/Room');
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
@@ -24,10 +24,10 @@ io.sockets.on("connect",function(socket){
     LIST_SOCKET[socket.id] = socket;
     console.log('a client connected');
     
-    socket.on('joinRoom',function(name){
-        var memb = new Member({id:socket.id, socket: socket, name:name});
+    socket.on('joinRoom',function(data){
+        var memb = new Member({id:socket.id, socket: socket, name:data.name});
         LIST_MEMB[memb.id] = memb;
-        console.log('joinRoom');
+        console.log(data.name+'-> joinRoom');
         var room = checkAvaiableRoom();
         if(room!=null){
             room.addMemb(memb);
@@ -36,6 +36,7 @@ io.sockets.on("connect",function(socket){
             room.addMemb(memb);
             LIST_ROOM[room.id]= room;
         }
+        socket.emit("joinRoomResponse",{id:room.id});
     });
 
     socket.on('leaveRoom',function(roomId){
@@ -63,7 +64,7 @@ io.sockets.on("connect",function(socket){
 
 // prive function
 var checkAvaiableRoom = function(){
-    var keys = LIST_ROOM.keys;
+    var keys = Object.keys(LIST_ROOM);
     for(var i=0;i<keys.length;i++){
         var room = LIST_ROOM[keys[i]];
         if(room.status === 'wait')

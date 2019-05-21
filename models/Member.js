@@ -1,9 +1,10 @@
-var Member = function(data){
-    var self ={
-        id: data.id,
-        socket: data.socket,
-        name: data.name,
-    }
+class Member {
 
-    return self;
+    constructor(data){
+        this.id = data.id;
+        this.socket = data.socket;
+        this.name = data.name;
+    }
 }
+
+module.exports = Member;

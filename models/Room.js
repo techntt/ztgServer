@@ -1,51 +1,55 @@
-var Room = function(data){
+class Room{
+    constructor(data){
+        this.id=data.id;
+        this.name=data.name;
+        this.status='wait';
+        this.count=0;
+        this.LIST_MEMB = {};
+        this.game= data.game;
 
-    var self = {
-        id:data.id,
-        name:data.name,
-        status:'wait',
-        count:0,
-        LIST_MEMB : {},
-        game: data.game,
-
-        addMemb: function(memb){
-            if(status === 'wait'){
-                LIST_MEMB[memb.id]=memb;
-                count ++;
-                if(count>=2){
-                    status = 'ready';
-                    sendAll({event:'roomStatus',mess:status})
+        this.addMemb = function(memb){
+            if(this.status === 'wait'){
+                this.LIST_MEMB[memb.id]=memb;
+                this.count ++;
+                if(this.count>=2){
+                    this.status = 'ready';
+                    sendAll({event:'roomStatus',mess:this.status})
                     // start game
                 }
             }
-        },
+        };
 
-        removeMemb :function(membId){
-            if(LIST_MEMB.hasOwnProperty(membId)){
-                delete LIST_MEMB[membId];
-                count --;
-                if(count < 2){
-                    status = 'wait';
-                    sendAll({event:'roomStatus',mess:status})
+        this.removeMemb =function(membId){
+            if(this.LIST_MEMB.hasOwnProperty(membId)){
+                delete this.LIST_MEMB[membId];
+                this.count --;
+                if(this.count < 2){
+                    this.status = 'wait';
+                    sendAll({event:'roomStatus',mess:this.status})
                 }
             }
                 
-        },
+        };
 
-        sendAll : function(data){
-            var keys = LIST_MEMB.keys;
+        this.sendAll = function(data){
+            var keys = Object.keys(this.LIST_MEMB);
             for(var i =0;i < keys.length;i++){
-                var memb = LIST_MEMB[keys[i]];
+                var memb = this.LIST_MEMB[keys[i]];
                 memb.socket.emit(data.event,data.mess);
             }
-        },
+        };
 
-        sendMemb : function(data){
-            if(LIST_MEMB.hasOwnProperty(data.id)){
-                var memb = LIST_MEMB[data.id];
+        this.sendMemb = function(data){
+            if(this.LIST_MEMB.hasOwnProperty(data.id)){
+                var memb = this.LIST_MEMB[data.id];
                 memb.socket.emit(data.event,data.mess);
             }
         }
     }
-    return self;
+
+    Instance(){
+        return this;
+    }
 }
+
+module.exports = Room;
