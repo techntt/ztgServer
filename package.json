@@ -1,0 +1,16 @@
+{
+  "name": "myserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "test app.js"
+  },
+  "author": "truongnt",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mongojs": "^2.6.0",
+    "socket.io": "^2.2.0"
+  }
+}
