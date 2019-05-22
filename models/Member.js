@@ -4,6 +4,7 @@ class Member {
         this.id = data.id;
         this.socket = data.socket;
         this.name = data.name;
+        this.LIST_ROOM_JOIN ={};
     }
 }
 

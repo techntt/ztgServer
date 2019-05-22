@@ -10,25 +10,37 @@ class Room{
         this.addMemb = function(memb){
             if(this.status === 'wait'){
                 this.LIST_MEMB[memb.id]=memb;
-                this.sendAll({event:"memberJoinRoom",mess:{name:memb.name,id:memb.id}});
+                var list = {};
+                var keys = Object.keys(this.LIST_MEMB);
+                for(var i =0;i < keys.length;i++){
+                    list[keys[i]] = this.LIST_MEMB[keys[i]].name;
+                };
+                console.log("List: "+Object.keys(list));
+                this.sendAll({event:"memberJoinRoom",mess:{members: list}});
                 this.count ++;
+                
                 if(this.count>=2){
                     this.status = 'ready';
-                    this.sendAll({event:'roomStatus',mess:this.status})
+                    this.sendAll({event:'roomStatus',mess:{satus: this.status}})
                     // start game
                 }
+                
             }
         };
 
-        this.removeMemb =function(membId){
+        this.removeMemb = function(membId){
             if(this.LIST_MEMB.hasOwnProperty(membId)){
-                var memb = this.LIST_MEMB[membId];
-                this.sendAll({event:"memberLeaveRoom",mess:{name:memb.name,id:memb.id}});
+                var list = {};
+                var keys = Object.keys(this.LIST_MEMB);
+                for(var i =0;i < keys.length;i++){
+                    list[keys[i]] = this.LIST_MEMB[keys[i]].name;
+                };
+                this.sendAll({event:"memberLeaveRoom",mess:{members: list}});
                 delete this.LIST_MEMB[membId];
                 this.count --;
                 if(this.count < 2){
                     this.status = 'wait';
-                    this.sendAll({event:'roomStatus',mess:this.status})
+                    this.sendAll({event:'roomStatus',mess:{satus: this.status}})
                 }
             }
                 

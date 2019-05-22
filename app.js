@@ -22,7 +22,8 @@ var LIST_ROOM = {};
 io.sockets.on("connect",function(socket){
     socket.id = Math.random();
     LIST_SOCKET[socket.id] = socket;
-    console.log('a client connected');
+    console.log("SocketList: "+ Object.keys(LIST_SOCKET).length);
+    console.log('a client connected : '+socket.id);
     socket.emit('connectResponse',{id:socket.id});
     socket.on('joinRoom',function(data){
         var memb = new Member({id:socket.id, socket: socket, name:data.name});
@@ -36,6 +37,7 @@ io.sockets.on("connect",function(socket){
             room.addMemb(memb);
             LIST_ROOM[room.id]= room;
         }
+        memb.LIST_ROOM_JOIN[room.id] = room;
         socket.emit("joinRoomResponse",{id:room.id});
     });
 
@@ -53,11 +55,23 @@ io.sockets.on("connect",function(socket){
     
     // socket disconnect
     socket.on('disconnect',function(){
-        console.log('a client disconnected');
+        console.log('a client disconnected : '+socket.id);
         if(LIST_SOCKET.hasOwnProperty(socket.id))
             delete LIST_SOCKET[socket.id];
-        if(LIST_MEMB.hasOwnProperty(socket.id))
+        if(LIST_MEMB.hasOwnProperty(socket.id)){
+            var memb = LIST_MEMB[socket.id];
+            if(memb.LIST_ROOM_JOIN.length > 0){
+                var keys = Object.keys(memb.LIST_ROOM_JOIN);
+                for(var i=0;i<keys.length;i++){
+                    var room = memb.LIST_ROOM_JOIN[keys[i]];
+                    room.removeMemb(socket.id);
+                    if(room.count <=0 )
+                        delete LIST_ROOM[roomId];
+                }
+            }
             delete LIST_MEMB[socket.id];
+        }
+        console.log("SocketList: "+ Object.keys(LIST_SOCKET).length);
     });
 });
 
