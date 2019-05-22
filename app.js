@@ -23,7 +23,7 @@ io.sockets.on("connect",function(socket){
     socket.id = Math.random();
     LIST_SOCKET[socket.id] = socket;
     console.log('a client connected');
-    
+    socket.emit('connectResponse',{id:socket.id});
     socket.on('joinRoom',function(data){
         var memb = new Member({id:socket.id, socket: socket, name:data.name});
         LIST_MEMB[memb.id] = memb;

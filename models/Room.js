@@ -10,10 +10,11 @@ class Room{
         this.addMemb = function(memb){
             if(this.status === 'wait'){
                 this.LIST_MEMB[memb.id]=memb;
+                this.sendAll({event:"memberJoinRoom",mess:{name:memb.name,id:memb.id}});
                 this.count ++;
                 if(this.count>=2){
                     this.status = 'ready';
-                    sendAll({event:'roomStatus',mess:this.status})
+                    this.sendAll({event:'roomStatus',mess:this.status})
                     // start game
                 }
             }
@@ -21,11 +22,13 @@ class Room{
 
         this.removeMemb =function(membId){
             if(this.LIST_MEMB.hasOwnProperty(membId)){
+                var memb = this.LIST_MEMB[membId];
+                this.sendAll({event:"memberLeaveRoom",mess:{name:memb.name,id:memb.id}});
                 delete this.LIST_MEMB[membId];
                 this.count --;
                 if(this.count < 2){
                     this.status = 'wait';
-                    sendAll({event:'roomStatus',mess:this.status})
+                    this.sendAll({event:'roomStatus',mess:this.status})
                 }
             }
                 
