@@ -1,11 +1,13 @@
+var GameOne = require('../controller/GameOne');
 class Room{
     constructor(data){
+        
         this.id=data.id;
         this.name=data.name;
         this.status='wait';
         this.count=0;
         this.LIST_MEMB = {};
-        this.game= data.game;
+        this.game = null;
 
         this.addMemb = function(memb){
             if(this.status === 'wait'){
@@ -23,7 +25,10 @@ class Room{
                     this.status = 'ready';
                     this.sendAll({event:'roomStatus',mess:{status: this.status}})
                     // start game
-                    console.log("Room: "+this.id+ " start game");
+                    console.log("Room: "+this.id+ " init game");
+                    this.game = new GameOne(this);
+                    this.game.startGame();
+                    this.game.updateGame(true);
                 }
                 
             }
@@ -42,6 +47,14 @@ class Room{
                 if(this.count < 2){
                     this.status = 'wait';
                     this.sendAll({event:'roomStatus',mess:{status: this.status}})
+                    this.game.updateGame(false);
+                }
+                if(this.count == 0){
+                    if(this.game!=null){
+                        this.game.updateGame(false);
+                        delete this.game;
+                    }
+                    
                 }
             }
                 
