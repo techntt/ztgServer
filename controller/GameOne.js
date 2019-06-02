@@ -44,7 +44,7 @@ class GameOne{
                     var sec = counter/5;
                     console.log("Second: "+sec);
                     room.sendAll({event:"countDown",mess:{time:sec}});
-                    if(counter == 15){
+                    if(sec == 3){
                         status = 'start';
                         room.sendAll({event:"gameStart",mess:{}});
                         count = 0;
