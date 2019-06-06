@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "test app.js"
+    "test": "test app.js",
+    "start": "node app.js"
   },
   "author": "truongnt",
   "license": "ISC",
