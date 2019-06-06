@@ -1,19 +1,24 @@
 const Member = require('./models/Member');
 const Room = require('./models/Room');
 const Database = require('./database/Database')
+
+var path = require('path');
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
 
+
+
 var expressip = require('express-ip');
 app.use(expressip().getIpInfoMiddleware);
+
 app.get('/',function(req,res){
-    var ipInfo = req.ipInfo;
-    //var message = `${ipInfo.city} , ${ipInfo.country}`;
-    res.send(req.ipInfo);
+	var ipInfo = req.ipInfo;
+    var message = `${ipInfo.country}`;
+    res.send(message);
 });
 
-var port = process.env.port || 8080;
+var port = process.env.PORT || 8080;
 serv.listen(port);
 
 var io = require('socket.io')(serv);
