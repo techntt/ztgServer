@@ -3,7 +3,7 @@ class Database {
     constructor(){
     var uri = "mongodb://admin:admin@cluster0-shard-00-00-tzr0l.mongodb.net:27017,cluster0-shard-00-01-tzr0l.mongodb.net:27017,cluster0-shard-00-02-tzr0l.mongodb.net:27017/camvan?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority";
     var db = mongo(uri);
-    console.log("Database Connected: "+database);
+    console.log("Database Connected: "+db);
     
     this.isValidUser = function(data,callback){
         db.user.find({username : data.username, password : data.password},function(err,res){

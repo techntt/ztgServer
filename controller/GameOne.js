@@ -9,6 +9,7 @@ class GameOne{
         var keys = Object.keys(room.LIST_MEMB);
         var quest; 
         var questNumber =0;
+        var userReady = 0;
         keys.forEach(element=>{
             var memb = room.LIST_MEMB[element];
             var player = Player({socket:memb.socket,health:5});
@@ -16,6 +17,13 @@ class GameOne{
             player.socket.on("sendAnswer",(data)=>{
                 player.questid = data.id;
                 player.answer = data.answer;
+            });
+
+            player.socket.on("startGame",()=>{
+                userReady ++;
+                if(userReady == keys.length){
+                    this.startGame();
+                }
             });
         });
 
@@ -47,14 +55,14 @@ class GameOne{
                     if(sec == 3){
                         status = 'start';
                         room.sendAll({event:"gameStart",mess:{}});
-                        count = 0;
+                        counter = 0;
                     }
-                }
-                 
+                }                 
             }else if(status === 'start'){
-                GameLoop(count);
+                GameLoop();
             }else if(status === 'end'){
                // Check Winner
+               console.log("End Game");
                keys.forEach(element=>{
                 var pl = LIST_PLAYER[element];
                 pl.gameResult({
@@ -65,8 +73,8 @@ class GameOne{
             }
         };
 
-        function GameLoop(count){
-            if(count == 0){
+        function GameLoop(){
+            if(counter == 0){
                 // Handle send question
                 quest = Question({
                     id :(questNumber+1),
@@ -75,13 +83,14 @@ class GameOne{
                     answer : ["A Answer","B Answer","C Answer","D Answer"],
                     correct : 1,  // "B Answer"
                 });
-
-            }else if(count <50){
+                console.log("question : "+quest.id);
+            }else if(counter <50){
                 // Handle send time
-                if(count%5 ==0){
+                if(counter%5 ==0){
                     var sec = counter/5;
                     sec = 10-sec;
                     room.sendAll({event:"timeQuest",mess:{time:sec}});
+                    console.log("Time : "+sec);
                 }
             }else{
                 // Kiem tra dap ap cua nguoi choi
@@ -92,17 +101,17 @@ class GameOne{
                     if(plHealth == 0)
                         endGame = true;
                 });
-
+                console.log("Time out");
                 if(endGame)
                     status = "end";
                 else{
-                    if(count >= 60){
-                        count = -1;
+                    if(counter >= 60){
+                        counter = -1;
                     }
                 }
             }
 
-            count++;
+            counter++;
         };
 
     }

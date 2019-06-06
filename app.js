@@ -91,7 +91,7 @@ io.sockets.on("connect",function(socket){
 
 
 // prive function
-var checkAvaiableRoom = function(){
+checkAvaiableRoom = function(){
     var keys = Object.keys(LIST_ROOM);
     for(var i=0;i<keys.length;i++){
         var room = LIST_ROOM[keys[i]];
