@@ -5,8 +5,12 @@ var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
 
+var expressip = require('express-ip');
+app.use(expressip().getIpInfoMiddleware);
 app.get('/',function(req,res){
-
+    var ipInfo = req.ipInfo;
+    //var message = `${ipInfo.city} , ${ipInfo.country}`;
+    res.send(req.ipInfo);
 });
 
 var port = process.env.port || 8080;
