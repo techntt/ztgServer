@@ -1,5 +1,6 @@
 const Member = require('./models/Member');
 const Room = require('./models/Room');
+const Database = require('./database/Database')
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
@@ -14,6 +15,8 @@ serv.listen(port);
 var io = require('socket.io')(serv);
 
 console.log('>>> Server started <<<');
+console.log('>>> Port: '+port+ " <<<");
+var database = new Database();
 
 var LIST_SOCKET = {};
 var LIST_MEMB = {};

@@ -116,8 +116,7 @@ Player = function(data){
         health : data.health,
         questid: "",
         answer : -1,
-
-        checkAnswer = function(quest){
+        checkAnswer : function(quest){
             if(questid != quest.id || answer != quest.correct){
                 health -=1;
             }
@@ -132,24 +131,23 @@ Player = function(data){
             }
         },
 
-        gameResult = function(data){
+        gameResult : function(data){
             socket.emit("gameResult",{
                 win: data.win,
                 number: data.number,
             });
         }
-        
-    },
+    }
     return self;
 }
 
 Question = function(data){
     var self = {
-        id = data.id,
-        type = data.type,
-        quest = data.quest,
-        answers = data.answers,
-        correct = data.correct
+        id : data.id,
+        type : data.type,
+        quest : data.quest,
+        answers : data.answers,
+        correct : data.correct
     }
     return self;
 }
