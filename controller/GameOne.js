@@ -52,7 +52,7 @@ class GameOne{
                     var sec = counter/5;
                     console.log("Second: "+sec);
                     room.sendAll({event:"countDown",mess:{time:sec}});
-                    if(sec == 3){
+                    if(sec == 6){
                         status = 'start';
                         room.sendAll({event:"gameStart",mess:{}});
                         counter = 0;
@@ -83,6 +83,13 @@ class GameOne{
                     answer : ["A Answer","B Answer","C Answer","D Answer"],
                     correct : 1,  // "B Answer"
                 });
+
+                room.sendAll({event:"sendQuestion",mess:{
+                    id:quest.id,
+                    type:quest.type,
+                    quest:quest.quest,
+                    answer:quest.answer
+                    }});
                 console.log("question : "+quest.id);
             }else if(counter <50){
                 // Handle send time
@@ -129,9 +136,9 @@ Player = function(data){
             if(this.questid != quest.id || this.answer != quest.correct){
                 this.health -=1;
             }
-            socket.emit("checkAnswer",{
-                correct : correct,
-                health:health,
+            this.socket.emit("checkAnswer",{
+                correct : quest.correct,
+                health: this.health,
             });
             if(this.health<=0){
                 return false;
@@ -141,7 +148,7 @@ Player = function(data){
         },
 
         gameResult : function(data){
-            socket.emit("gameResult",{
+            this.socket.emit("gameResult",{
                 win: data.win,
                 number: data.number,
             });
