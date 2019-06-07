@@ -126,14 +126,14 @@ Player = function(data){
         questid: "",
         answer : -1,
         checkAnswer : function(quest){
-            if(questid != quest.id || answer != quest.correct){
-                health -=1;
+            if(this.questid != quest.id || this.answer != quest.correct){
+                this.health -=1;
             }
             socket.emit("checkAnswer",{
                 correct : correct,
                 health:health,
             });
-            if(health<=0){
+            if(this.health<=0){
                 return false;
             }else{
                 return true;
