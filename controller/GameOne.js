@@ -36,7 +36,7 @@ class GameOne{
             if(run && updateTask == null){
                 updateTask = setInterval(function(){
                     updateGameStatus();
-                 },200);
+                 },1000);
             }
 
             if(!run && updateTask!=null){
@@ -48,20 +48,18 @@ class GameOne{
         function updateGameStatus(){
             if(status === 'ready'){
                 counter ++;
-                if(counter%5==0){
-                    var sec = counter/5;
-                    console.log("Second: "+sec);
-                    room.sendAll({event:"countDown",mess:{time:sec}});
-                    if(sec == 6){
-                        status = 'start';
-                        room.sendAll({event:"gameStart",mess:{}});
-                        counter = 0;
-                    }
-                }                 
+                console.log("Second: "+counter);
+                room.sendAll({event:"countDown",mess:{time:counter}});
+                if(counter == 6){
+                    status = 'start';
+                    room.sendAll({event:"gameStart",mess:{}});
+                    counter = 0;
+                }                
             }else if(status === 'start'){
                 GameLoop();
             }else if(status === 'end'){
                // Check Winner
+               status="";
                console.log("End Game");
                keys.forEach(element=>{
                 var pl = LIST_PLAYER[element];
@@ -80,7 +78,7 @@ class GameOne{
                     id :(questNumber+1),
                     type : "text",
                     quest : "What 's exactly?",
-                    answer : ["A Answer","B Answer","C Answer","D Answer"],
+                    answers : ["A Answer","B Answer","C Answer","D Answer"],
                     correct : 1,  // "B Answer"
                 });
 
@@ -88,17 +86,14 @@ class GameOne{
                     id:quest.id,
                     type:quest.type,
                     quest:quest.quest,
-                    answer:quest.answer
+                    answers:quest.answers,
                     }});
                 console.log("question : "+quest.id);
-            }else if(counter <50){
+            }else if(counter <=30){
                 // Handle send time
-                if(counter%5 ==0){
-                    var sec = counter/5;
-                    sec = 10-sec;
-                    room.sendAll({event:"timeQuest",mess:{time:sec}});
-                    console.log("Time : "+sec);
-                }
+                var sec = 30-counter;
+                room.sendAll({event:"timeQuest",mess:{time:sec}});
+                console.log("Time : "+sec);
             }else{
                 // Kiem tra dap ap cua nguoi choi
                 var endGame = false;
@@ -108,11 +103,11 @@ class GameOne{
                     if(plHealth == 0)
                         endGame = true;
                 });
-                console.log("Time out");
+                
                 if(endGame)
                     status = "end";
                 else{
-                    if(counter >= 60){
+                    if(counter >= 40){
                         counter = -1;
                     }
                 }

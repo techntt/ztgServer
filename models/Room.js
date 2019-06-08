@@ -23,12 +23,15 @@ class Room{
                 
                 if(this.count>=2){
                     this.status = 'ready';
-                    this.sendAll({event:"roomStatus",mess:{status: this.status}})
-                    // start game
-                    console.log("Room: "+this.id+ " init game");
-                    this.game = new GameOne(this);
-                    //this.game.startGame();
-                    this.game.updateGame(true);
+                    setTimeout(()=>{
+                        this.sendAll({event:"roomStatus",mess:{status: this.status}})
+                        // start game
+                        console.log("Room: "+this.id+ " init game");
+                        this.game = new GameOne(this);
+                        //this.game.startGame();
+                        this.game.updateGame(true);
+                    },2000);
+                   
                 }
                 
             }
