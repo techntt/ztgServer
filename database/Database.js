@@ -24,10 +24,18 @@ class Database {
     };
 
     this.addUser = function(data,callback){
-        db.user.insert({username:data.username, password:data.password,email: data.email,status: 1},function(err){
-            console.log("DB create user: "+data.username);
-            callback();
-        });
+        db.user.insert({
+            username:data.username,
+            password:data.password,
+            email: data.email,
+            level:0,
+            exp:0,
+            status: 1},
+            function(err){
+                console.log("DB create user: "+data.username);
+                callback();
+            }
+        );
     };
 
     this.changeStatusUser = function(data,callback){
