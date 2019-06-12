@@ -5,6 +5,8 @@ class Member {
         this.socket = data.socket;
         this.name = data.name;
         this.LIST_ROOM_JOIN ={};
+        this.level = data.level;
+        this.socre = data.score;
     }
 }
 

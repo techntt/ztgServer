@@ -53,6 +53,7 @@ io.sockets.on("connect",function(socket){
         socket.emit("joinRoomResponse",{id:room.id});
     });
 
+    
     socket.on('leaveRoom',function(roomId){
         console.log('leaveRoom');
         if(LIST_MEMB.hasOwnProperty(socket.id))
@@ -64,7 +65,52 @@ io.sockets.on("connect",function(socket){
                 delete LIST_ROOM[roomId];
         }
     });
-    
+
+    /*
+    Handle authenticate user
+    */
+    socket.on("requestSignIn",function(data){
+        database.isValidUser(data,(err)=>{
+            if(err){
+                socket.emit("responseSignIn",{
+                    result:false,
+                    message:"username or password is wrong"
+                });
+            }else{
+                socket.emit("responseSignIn",{
+                    result:true,
+                    message:"login success"
+                });
+            }
+        });
+    });
+
+    socket.on("requestSignUp",function(data){
+        database.hasUserName(data,(err)=>{
+            if(err){
+                socket.emit("responseSignUp",{
+                    result : false,
+                    message : "username has exist"
+                });
+            }else{
+                // user isn't exist
+                database.addUser(data,(success)=>{
+                    if(success){
+                        socket.emit("responseSignUp",{
+                            result : true,
+                            message : "register success"
+                        });
+                    }else{
+                        socket.emit("responseSignUp",{
+                            result : false,
+                            message : "something wrong"
+                        });
+                    }
+                });
+            }
+        });
+    });
+
     // socket disconnect
     socket.on('disconnect',function(){
         console.log('a client disconnected : '+socket.id);

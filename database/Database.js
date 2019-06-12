@@ -29,7 +29,7 @@ class Database {
             password:data.password,
             email: data.email,
             level:0,
-            exp:0,
+            score:0,
             status: 1},
             function(err){
                 console.log("DB create user: "+data.username);
