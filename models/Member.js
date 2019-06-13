@@ -6,7 +6,7 @@ class Member {
         this.name = data.name;
         this.LIST_ROOM_JOIN ={};
         this.level = data.level;
-        this.socre = data.score;
+        this.score = data.score;
     }
 }
 
