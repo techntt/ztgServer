@@ -80,7 +80,7 @@ io.sockets.on("connect",function(socket){
                     score: user.score
                 });
                 LIST_MEMB[memb.id] = memb;
-                console.log(data.name+'-> Login');
+                console.log(memb.name+'-> Login');
                 socket.emit("responseSignIn",{
                     result:true,
                     message:"login success",
