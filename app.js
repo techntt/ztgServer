@@ -75,7 +75,7 @@ io.sockets.on("connect",function(socket){
                 var memb = new Member({
                     id:socket.id,
                     socket: socket,
-                    name: user.name,
+                    name: user.username,
                     level: user.level,
                     score: user.score
                 });
