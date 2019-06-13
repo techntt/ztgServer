@@ -7,10 +7,16 @@ class Database {
     
     this.isValidUser = function(data,callback){
         db.user.find({username : data.username, password : data.password},function(err,res){
-            if(res.length>0)
-                callback(true);
+            if(res.length>0){
+                callback({
+                    result:true,
+                    user:res[0],
+                });
+            }
             else
-                callback(false);
+                callback({
+                    result:false,
+                });
             });
     };
 

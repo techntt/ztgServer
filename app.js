@@ -37,9 +37,8 @@ io.sockets.on("connect",function(socket){
     console.log("SocketList: "+ Object.keys(LIST_SOCKET).length);
     console.log('a client connected : '+socket.id);
     socket.emit('connectResponse',{id:""+socket.id});
-    socket.on('joinRoom',function(data){
-        var memb = new Member({id:socket.id, socket: socket, name:data.name});
-        LIST_MEMB[memb.id] = memb;
+    socket.on('joinRoom',function(data){        
+        var memb =LIST_MEMB[socket.id];
         console.log(data.name+'-> joinRoom');
         var room = checkAvaiableRoom();
         if(room!=null){
@@ -70,16 +69,29 @@ io.sockets.on("connect",function(socket){
     Handle authenticate user
     */
     socket.on("requestSignIn",function(data){
-        database.isValidUser(data,(err)=>{
-            if(err){
-                socket.emit("responseSignIn",{
-                    result:false,
-                    message:"username or password is wrong"
+        database.isValidUser(data,(res)=>{
+            if(res.result){
+                var user = res.user;
+                var memb = new Member({
+                    id:socket.id,
+                    socket: socket,
+                    name: user.name,
+                    level: user.level,
+                    score: user.score
                 });
-            }else{
+                LIST_MEMB[memb.id] = memb;
+                console.log(data.name+'-> Login');
                 socket.emit("responseSignIn",{
                     result:true,
-                    message:"login success"
+                    message:"login success",
+                    name: memb.name,
+                    level: memb.level,
+                    score: memb.score
+                });
+            }else{
+                socket.emit("responseSignIn",{                    
+                    result:false,
+                    message:"username or password is wrong"
                 });
             }
         });
