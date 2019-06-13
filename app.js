@@ -18,7 +18,7 @@ app.get('/',function(req,res){
     res.send(message);
 });
 
-var port = process.env.PORT || 130192;
+var port = 13192 || process.env.PORT;
 serv.listen(port);
 
 var io = require('socket.io')(serv);
