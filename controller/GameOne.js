@@ -48,13 +48,15 @@ class GameOne{
         function updateGameStatus(){
             if(status === 'ready'){
                 counter ++; 
-                var sec = counter/4;               
-                room.sendAll({event:"countDown",mess:{time:sec}});
-                if(sec == 6){
-                    status = 'start';
-                    room.sendAll({event:"gameStart",mess:{}});
-                    counter = 0;
-                }                
+                if(counter%4 ===0){
+                    var sec = Math.floor(counter/4) ;               
+                    room.sendAll({event:"countDown",mess:{time:sec}});
+                    if(sec == 6){
+                        status = 'start';
+                        room.sendAll({event:"gameStart",mess:{}});
+                        counter = 0;
+                    }
+                }              
             }else if(status === 'start'){
                 GameLoop();
             }else if(status === 'end'){
@@ -91,7 +93,7 @@ class GameOne{
                 console.log("question : "+quest.id);
             }else if(counter <=120){
                 // Handle send time
-                var sec = 30-counter/4;
+                var sec = 30-Math.floor(counter/4);
                 room.sendAll({event:"timeQuest",mess:{time:sec}});                
             }else{
                 // Kiem tra dap ap cua nguoi choi
