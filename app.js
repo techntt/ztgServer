@@ -37,33 +37,7 @@ io.sockets.on("connect",function(socket){
     console.log("SocketList: "+ Object.keys(LIST_SOCKET).length);
     console.log('a client connected : '+socket.id);
     socket.emit('connectResponse',{id:""+socket.id});
-    socket.on('joinRoom',function(data){        
-        var memb =LIST_MEMB[socket.id];
-        console.log(data.name+'-> joinRoom');
-        var room = checkAvaiableRoom();
-        if(room!=null){
-            room.addMemb(memb);
-        }else{
-            room = new Room({id:memb.id,name:"r_"+memb.id});
-            room.addMemb(memb);
-            LIST_ROOM[room.id]= room;
-        }
-        memb.LIST_ROOM_JOIN[room.id] = room;
-        socket.emit("joinRoomResponse",{id:room.id});
-    });
 
-    
-    socket.on('leaveRoom',function(roomId){
-        console.log('leaveRoom');
-        if(LIST_MEMB.hasOwnProperty(socket.id))
-            delete LIST_MEMB[socket.id];
-        if(LIST_ROOM.hasOwnProperty(roomId)){
-            var room = LIST_ROOM[roomId];
-            room.removeMemb(socket.id);
-            if(room.count <=0 )
-                delete LIST_ROOM[roomId];
-        }
-    });
 
     /*
     Handle authenticate user
@@ -123,6 +97,36 @@ io.sockets.on("connect",function(socket){
         });
     });
 
+    /**
+     * Matching user
+    */
+    socket.on('joinRoom',function(data){        
+        var memb =LIST_MEMB[socket.id];
+        console.log(data.name+'-> joinRoom');
+        var room = checkAvaiableRoom();
+        if(room!=null){
+            room.addMemb(memb);
+        }else{
+            room = new Room({id:memb.id,name:"r_"+memb.id});
+            room.addMemb(memb);
+            LIST_ROOM[room.id]= room;
+        }
+        memb.LIST_ROOM_JOIN[room.id] = room;
+        socket.emit("joinRoomResponse",{id:room.id});
+    });
+
+    
+    socket.on('leaveRoom',function(roomId){
+        console.log('leaveRoom');
+        if(LIST_MEMB.hasOwnProperty(socket.id))
+            delete LIST_MEMB[socket.id];
+        if(LIST_ROOM.hasOwnProperty(roomId)){
+            var room = LIST_ROOM[roomId];
+            room.removeMemb(socket.id);
+            if(room.count <=0 )
+                delete LIST_ROOM[roomId];
+        }
+    });
     // socket disconnect
     socket.on('disconnect',function(){
         console.log('a client disconnected : '+socket.id);
