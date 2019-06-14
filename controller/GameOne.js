@@ -36,7 +36,7 @@ class GameOne{
             if(run && updateTask == null){
                 updateTask = setInterval(function(){
                     updateGameStatus();
-                 },1000);
+                 },250);
             }
 
             if(!run && updateTask!=null){
@@ -47,10 +47,10 @@ class GameOne{
 
         function updateGameStatus(){
             if(status === 'ready'){
-                counter ++;
-                console.log("Second: "+counter);
-                room.sendAll({event:"countDown",mess:{time:counter}});
-                if(counter == 6){
+                counter ++; 
+                var sec = counter/4;               
+                room.sendAll({event:"countDown",mess:{time:sec}});
+                if(sec == 6){
                     status = 'start';
                     room.sendAll({event:"gameStart",mess:{}});
                     counter = 0;
@@ -89,11 +89,10 @@ class GameOne{
                     answers:quest.answers,
                     }});
                 console.log("question : "+quest.id);
-            }else if(counter <=30){
+            }else if(counter <=120){
                 // Handle send time
-                var sec = 30-counter;
-                room.sendAll({event:"timeQuest",mess:{time:sec}});
-                console.log("Time : "+sec);
+                var sec = 30-counter/4;
+                room.sendAll({event:"timeQuest",mess:{time:sec}});                
             }else{
                 // Kiem tra dap ap cua nguoi choi
                 var endGame = false;
@@ -107,12 +106,11 @@ class GameOne{
                 if(endGame)
                     status = "end";
                 else{
-                    if(counter >= 40){
+                    if(counter >= 160){
                         counter = -1;
                     }
                 }
             }
-
             counter++;
         };
 

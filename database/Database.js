@@ -39,7 +39,7 @@ class Database {
             status: 1},
             function(err){
                 console.log("DB create user: "+data.username);
-                callback();
+                callback(err);
             }
         );
     };

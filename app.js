@@ -80,8 +80,8 @@ io.sockets.on("connect",function(socket){
                 });
             }else{
                 // user isn't exist
-                database.addUser(data,(success)=>{
-                    if(success){
+                database.addUser(data,(err)=>{
+                    if(!err){
                         socket.emit("responseSignUp",{
                             result : true,
                             message : "register success"
