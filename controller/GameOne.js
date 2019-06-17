@@ -7,13 +7,16 @@ class GameOne{
         var updateTask = null;
         var LIST_PLAYER = {};
         var keys = Object.keys(room.LIST_MEMB);
+        var idArr = [];
         var quest; 
         var questNumber =0;
         var userReady = 0;
+        var checking  = false;
         keys.forEach(element=>{
             var memb = room.LIST_MEMB[element];
             var player = Player({socket:memb.socket,health:5});
             LIST_PLAYER[player.id]= player;
+            idArr.push(player.id);
             player.socket.on("sendAnswer",(data)=>{
                 player.questid = data.id;
                 player.answer = data.answer;
@@ -30,6 +33,7 @@ class GameOne{
         this.startGame = function(){
             status = 'ready';
             console.log("Game ready! "+status);
+            
         };
 
         this.updateGame = function(run){
@@ -89,7 +93,9 @@ class GameOne{
                     type:quest.type,
                     quest:quest.quest,
                     answers:quest.answers,
-                    }});
+                    }}
+                );
+                checking = false;
                 console.log("question : "+quest.id);
             }else if(counter <=120){
                 // Handle send time
@@ -98,13 +104,15 @@ class GameOne{
             }else{
                 // Kiem tra dap ap cua nguoi choi
                 var endGame = false;
-                keys.forEach(element=>{
-                    var pl = LIST_PLAYER[element];
-                    var plHealth = pl.checkAnswer(quest);
-                    if(plHealth == 0)
-                        endGame = true;
-                });
-                
+                if(!checking){
+                    checking = true;
+                    keys.forEach(element=>{
+                        var pl = LIST_PLAYER[element];
+                        if(!pl.checkAnswer(quest))
+                            endGame = true;
+                    });
+                    UpdatePlayerInfo();
+                }                
                 if(endGame)
                     status = "end";
                 else{
@@ -115,6 +123,21 @@ class GameOne{
             }
             counter++;
         };
+
+        function UpdatePlayerInfo(){
+            room.sendAll({event:"playerInfo",mess:{
+                player1 :{
+                    id: room.LIST_MEMB[idArr[0]].id,
+                    name: room.LIST_MEMB[idArr[0]].name,
+                    health : LIST_PLAYER[idArr[0]].health
+                },
+                player2: {
+                    id: room.LIST_MEMB[idArr[1]].id,
+                    name: room.LIST_MEMB[idArr[1]].name,
+                    health : LIST_PLAYER[idArr[1]].health
+                }
+            }});
+        }
 
     }
     
@@ -135,10 +158,10 @@ Player = function(data){
                 correct : quest.correct,
                 health: this.health,
             });
-            if(this.health<=0){
-                return false;
-            }else{
+            if(this.health>0){
                 return true;
+            }else{
+                return false;
             }
         },
 
