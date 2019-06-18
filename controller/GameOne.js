@@ -11,7 +11,7 @@ class GameOne{
         var quest; 
         var questNumber =0;
         var userReady = 0;
-        var checking  = false;
+        var checking  = false;      
         keys.forEach(element=>{
             var memb = room.LIST_MEMB[element];
             var player = Player({socket:memb.socket,health:5});
@@ -81,13 +81,13 @@ class GameOne{
             if(counter == 0){
                 // Handle send question
                 quest = Question({
-                    id :(questNumber+1),
+                    id :questNumber,
                     type : "text",
                     quest : "What 's exactly?",
                     answers : ["A Answer","B Answer","C Answer","D Answer"],
                     correct : 1,  // "B Answer"
                 });
-
+                questNumber +=1;
                 room.sendAll({event:"sendQuestion",mess:{
                     id:quest.id,
                     type:quest.type,
