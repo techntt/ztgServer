@@ -26,14 +26,14 @@ class GameOne{
                 userReady ++;
                 if(userReady == keys.length){
                     this.startGame();
+                    UpdatePlayerInfo();
                 }
             });
         });
 
         this.startGame = function(){
             status = 'ready';
-            console.log("Game ready! "+status);
-            
+            console.log("Game ready! "+status);            
         };
 
         this.updateGame = function(run){
@@ -125,7 +125,7 @@ class GameOne{
         };
 
         function UpdatePlayerInfo(){
-            room.sendAll({event:"playerInfo",mess:{
+            room.sendAll({event:"playersInfo",mess:{
                 player1 :{
                     id: room.LIST_MEMB[idArr[0]].id,
                     name: room.LIST_MEMB[idArr[0]].name,
