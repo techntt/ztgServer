@@ -64,8 +64,7 @@ class GameOne{
             }else if(status === 'start'){
                 GameLoop();
             }else if(status === 'end'){
-               // Check Winner
-               status="";
+               // Check Winner               
                console.log("End Game");
                keys.forEach(element=>{
                 var pl = LIST_PLAYER[element];
@@ -73,6 +72,7 @@ class GameOne{
                     win:(pl.health>0),
                     number:questNumber
                 });
+                status="";
             });
             }
         };
@@ -113,12 +113,12 @@ class GameOne{
                     });
                     UpdatePlayerInfo();
                 }                
-                if(endGame)
-                    status = "end";
-                else{
-                    if(counter >= 160){
-                        counter = -1;
-                    }
+                
+                if(counter >= 140){
+                    if(endGame)
+                        status = "end";
+                    else
+                        counter = -1;                    
                 }
             }
             counter++;
