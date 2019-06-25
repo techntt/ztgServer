@@ -11,7 +11,8 @@ class GameOne{
         var quest; 
         var questNumber =0;
         var userReady = 0;
-        var checking  = false;      
+        var checking  = false;   
+        var endGame = false;   
         keys.forEach(element=>{
             var memb = room.LIST_MEMB[element];
             var player = Player({socket:memb.socket,health:5});
@@ -73,6 +74,7 @@ class GameOne{
                     number:questNumber
                 });
                 status="";
+
             });
             }
         };
@@ -103,7 +105,6 @@ class GameOne{
                 room.sendAll({event:"timeQuest",mess:{time:sec}});                
             }else{
                 // Kiem tra dap ap cua nguoi choi
-                var endGame = false;
                 if(!checking){
                     checking = true;
                     keys.forEach(element=>{
