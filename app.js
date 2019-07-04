@@ -35,9 +35,11 @@ io.sockets.on("connect",function(socket){
     socket.id = Math.random();
     LIST_SOCKET[socket.id] = socket;
     console.log("SocketList: "+ Object.keys(LIST_SOCKET).length);
-    console.log('a client connected : '+socket.id);
-    socket.emit('connectResponse',{id:""+socket.id});
+    console.log('a client connected : '+socket.id);   
 
+    socket.on("requestGetId",function(){
+        socket.emit('connectResponse',{id:""+socket.id});
+    });
 
     /*
     Handle authenticate user
